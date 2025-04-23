@@ -7,9 +7,9 @@ Customer reviews were analyzed using various Natural Language Processing (NLP) t
 
 - Gensim
 - BERTopic for semantic clustering
-- Large Language Models (LLMs)
+- Large Language Model (LLM)
 
-Additionally, LLMs were leveraged to extract deeper insights from the review content. A sentiment analysis model was also used to identify reviews expressing strong negative emotions, helping to surface hidden emotional drivers of dissatisfaction. The project's ultimate goal is to uncover the underlying motivations behind customer dissatisfaction and propose targeted solutions to address the main issues, thereby supporting improvements in the overall member experience.
+Additionally, LLM were leveraged to extract deeper insights from the review content. A sentiment analysis model was also used to identify reviews expressing strong negative emotions, helping to surface hidden emotional drivers of dissatisfaction. The project's ultimate goal is to uncover the underlying motivations behind customer dissatisfaction and propose targeted solutions to address the main issues, thereby supporting improvements in the overall member experience.
 
 ## Project Structure
 ### 1.  Dataset Loading, EDA, and NLP Preprocessing Pipeline
@@ -30,13 +30,40 @@ The text preprocessing pipeline includes:
 This standardized text is then used as input for subsequent analysis steps.
 ### 2. Topic Modeling with BERTopic
 A pre-trained Hugging Face transformer model powers the BERTopic implementation, allowing for semantic clustering of reviews based on contextual embeddings rather than just keyword frequency. This approach enables the discovery of nuanced topics within the corpus of gym member feedback.
+
+Below the main topics identified in the merged dataset of negative reviews ( rating < 3):
+
+![image](https://github.com/user-attachments/assets/64440ced-2f80-465d-973b-c548dd095812)
+
+The topics appear to be well-separated and each one points to a distinct issue frequently mentioned by customers. From equipment quality and air conditioning to cleanliness and staff behavior, the topics reflect a wide range of operational aspects. This suggests that customer feedback is focused on specific, tangible problems rather than general dissatisfaction, providing clear opportunities for targeted improvements across different areas of the business.
+
 ### 3. Sentiment Analysis and Emotion-Specific Topic Modeling
-Sentiment analysis is conducted using a pre-trained Hugging Face emotion detection model to categorize reviews by emotional tone. Reviews with "anger" as the dominant emotion are isolated for further analysis, as these often contain the most actionable feedback. The angry reviews subset is then processed through BERTopic again to identify specific triggers associated with high negative emotional responses.
+Sentiment analysis is conducted using a pre-trained Hugging Face emotion detection model to categorize reviews by emotional tone. Reviews with "anger" as the dominant emotion are isolated for further analysis, as these often contain the most actionable feedback. The angry reviews subset is then processed through BERTopic again to identify specific triggers associated with high negative emotional responses. Below the topics identified:
+
+![image](https://github.com/user-attachments/assets/1616a610-3fe1-434e-a36b-c9774141107d)
+
+The analysis of reviews filtered by anger reveals a sharper focus on issues that trigger strong emotional responses, distinguishing them from the broader dissatisfaction patterns observed earlier. The most prominent topics (Topic 1, 2 and 3) highlight specific friction points that go beyond general inconvenience. These experiences, like paying for access and being unable to enter the gym or facing recurring issues with class scheduling, can generate frustration and a sense of unfair treatment. Such moments are more likely to provoke emotional reactions and ultimately drive customer churn.
+
+
 ### 4. LLM-Enhanced Insight Extraction
 The Phi-4-mini language model is leveraged in two distinct ways:
-1. Topic refinement: Extracting three subtopics from each review, which are then consolidated into a comprehensive list and clustered via BERTopic to identify primary themes with greater granularity
-2. Insight generation: Analyzing patterns in the data to provide actionable business insights and recommendations for addressing member concerns
-This multi-layered approach combines the strengths of traditional NLP techniques, modern embedding-based topic modeling, and generative AI to produce deeper understanding of customer feedback.
+1. Topic refinement: All customer reviews were processed using a large language model (LLM) with a single-shot prompting approach to extract three key subtopics from each review. These subtopics were then consolidated into a comprehensive list and clustered using BERTopic, enabling the identification of core themes with greater granularity and relevance to operational improvements.
+**This pre-processing step introduced a layer of abstraction, as the LLM distilled the original content into higher-level thematic representations**. For instance, rather than isolating specific complaints like broken machines, lack of variety, or long waits, the LLM might infer a broader issue such as "poor equipment maintenance and availability." As a result, BERTopic operated on input that was already semantically condensed, leading to the emergence of broader, more conceptual topics such as customer dissatisfaction, overcrowding, or poor communication.
+
+
+2. Insight generation: Analyzing patterns in the data—using the previously identified topics as input—to generate actionable business insights and targeted recommendations for addressing member concerns. This multi-layered approach leverages the strengths of traditional NLP techniques, embedding-based topic modeling, and generative AI to deliver a deeper and more structured understanding of customer feedback.
+Below an example of the generated insights:
+
+- Overcrowding and lack of space:
+   - Implement a reservation system to manage peak time attendance and ensure adequate space for all members.
+   - Expand gym facilities or add additional workout areas to accommodate more members.
+   - Offer off-peak hour classes to distribute the customer load throughout the day.
+ 
+- Poor customer service and communication:
+   - Provide comprehensive training for staff to improve customer interaction and problem-solving skills.
+   - Establish clear communication channels for members to reach out to customer service, such as a dedicated phone line, email, and chat support.
+   - Regularly update members on gym policies, class schedules, and any changes through multiple platforms (website, app, email).
+
 ### 5. Gensim
 Gensim is used to perform topic modeling on the review dataset. Gensim is a model based on Latent Dirichlet Allocation (LDA), a probabilistic model that identifies latent topics by analyzing word co-occurrence patterns.
 
